@@ -187,7 +187,7 @@ export default function UploadPage() {
       if (dbError) throw dbError;
 
       // 3. Handle Subjects for Structured Batch
-      let subjectIdsToLink: string[] = [];
+      const subjectIdsToLink: string[] = [];
       
       if (isStructuredBatch) {
         // Fetch or create subjects
@@ -198,7 +198,7 @@ export default function UploadPage() {
 
         for (const subjName of subjectsToProcess) {
           // find subject
-          let { data: existingSubj } = await supabase
+          const { data: existingSubj } = await supabase
             .from('subjects')
             .select('id')
             .eq('department_id', formData.department_id)
