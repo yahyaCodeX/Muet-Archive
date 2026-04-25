@@ -120,7 +120,7 @@ export default function Home() {
           {/* Headline */}
           <motion.h1
             {...fadeUp(0.1)}
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-6 leading-[0.95] tracking-[-0.03em]"
+            className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black mb-4 md:mb-6 leading-[1.05] md:leading-[0.95] tracking-[-0.02em] md:tracking-[-0.03em]"
           >
             <span className="block text-text">Your Ultimate</span>
             <span className="block text-gradient mt-1">MUET Study</span>
@@ -130,14 +130,14 @@ export default function Home() {
           {/* Subtext */}
           <motion.p
             {...fadeUp(0.2)}
-            className="text-lg md:text-xl text-text-muted mb-10 max-w-2xl mx-auto leading-relaxed"
+            className="text-base sm:text-lg md:text-xl text-text-muted mb-8 md:mb-10 max-w-2xl mx-auto leading-relaxed px-2"
           >
             Access thousands of past papers, notes &amp; handouts — uploaded by
             your fellow students. Ace your exams with our intelligent AI assistant.
           </motion.p>
 
           {/* CTAs */}
-          <motion.div {...fadeUp(0.3)} className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <motion.div {...fadeUp(0.3)} className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 w-full">
             <Link
               href="/browse"
               className="relative group inline-flex items-center gap-2.5 px-7 py-3.5 rounded-2xl text-white font-semibold text-base overflow-hidden"
@@ -178,7 +178,7 @@ export default function Home() {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.5 }}
-          className="relative z-10 mt-20 w-full max-w-4xl px-4 grid grid-cols-2 md:grid-cols-4 gap-3"
+          className="relative z-10 mt-12 md:mt-20 w-full max-w-4xl px-2 md:px-4 grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3"
         >
           {STATS.map((stat, i) => (
             <motion.div
@@ -235,7 +235,7 @@ export default function Home() {
                     <Sparkles className="w-3 h-3" />
                     Community
                   </div>
-                  <h2 className="text-2xl md:text-3xl font-black mb-3 text-text tracking-tight">
+                  <h2 className="text-xl sm:text-2xl md:text-3xl font-black mb-3 text-text tracking-tight">
                     🎓 Be a MUETian Hero!
                   </h2>
                   <p className="text-text-muted mb-4 leading-relaxed">
@@ -281,7 +281,7 @@ export default function Home() {
               <Zap className="w-3 h-3" />
               Features
             </div>
-            <h2 className="text-4xl md:text-5xl font-black tracking-tight text-text mb-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-text mb-4">
               Everything You Need<br className="hidden md:block" />
               <span className="text-gradient"> to Excel</span>
             </h2>
@@ -360,10 +360,10 @@ export default function Home() {
             Join over 10,000 MUETians already using MUET Archive to study smarter,
             not harder.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 w-full">
             <Link
               href="/browse"
-              className="inline-flex items-center gap-2.5 px-8 py-4 rounded-2xl text-white font-bold text-base"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl text-white font-bold text-base"
               style={{
                 background: "linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)",
                 boxShadow: "0 0 40px rgba(168,85,247,0.4), 0 8px 20px rgba(0,0,0,0.4)",
@@ -374,7 +374,7 @@ export default function Home() {
             </Link>
             <Link
               href="/auth/register"
-              className="glass-button inline-flex items-center gap-2.5 px-8 py-4 rounded-2xl text-text font-bold text-base bg-surface/50 border border-border hover:bg-surface/70 transition-all"
+              className="w-full sm:w-auto glass-button inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl text-text font-bold text-base bg-surface/50 border border-border hover:bg-surface/70 transition-all"
             >
               Create Account
               <ArrowRight className="w-5 h-5 text-primary" />

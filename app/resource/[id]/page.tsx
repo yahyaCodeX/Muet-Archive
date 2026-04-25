@@ -126,13 +126,30 @@ export default function ResourceDetailPage({ params }: { params: { id: string } 
               </div>
             </div>
 
-            {/* PDF Preview */}
-            <div className="glassmorphism p-2 rounded-2xl border border-border h-[600px] flex flex-col relative overflow-hidden bg-surface-2/30">
+            {/* PDF Preview (Desktop) */}
+            <div className="hidden md:flex glassmorphism p-2 rounded-2xl border border-border h-[600px] flex-col relative overflow-hidden bg-surface-2/30">
               <iframe 
                 src={`${resource.file_url}#toolbar=0`} 
                 className="w-full h-full rounded-xl border-none bg-white"
                 title="PDF Preview"
               />
+            </div>
+
+            {/* PDF Preview Fallback (Mobile) */}
+            <div className="md:hidden glassmorphism p-6 rounded-2xl border border-border flex flex-col items-center justify-center text-center gap-4 py-12">
+              <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-2">
+                <FileText className="w-8 h-8" />
+              </div>
+              <h3 className="text-lg font-bold text-text">PDF Preview</h3>
+              <p className="text-sm text-text-muted">In-page preview is disabled on mobile devices for better performance.</p>
+              <a 
+                href={resource.file_url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-full py-3.5 rounded-xl bg-surface hover:bg-surface-2 border border-border text-text font-bold transition-colors mt-2 flex justify-center"
+              >
+                Open in Full Screen
+              </a>
             </div>
             
           </div>

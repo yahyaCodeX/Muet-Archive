@@ -165,11 +165,10 @@ export default function BrowsePage() {
 
           {/* ── Filters Sidebar ── */}
           <AnimatePresence>
-            {(showFilters || true) && (
-              <motion.div
-                initial={false}
-                className="hidden lg:block w-full lg:w-60 flex-shrink-0"
-              >
+            <motion.div
+              initial={false}
+              className={`${showFilters ? 'block' : 'hidden'} lg:block w-full lg:w-60 flex-shrink-0`}
+            >
                 <div
                   className="rounded-2xl p-5 sticky top-24 border"
                   style={{
@@ -258,8 +257,7 @@ export default function BrowsePage() {
                     )}
                   </div>
                 </div>
-              </motion.div>
-            )}
+            </motion.div>
           </AnimatePresence>
 
           {/* ── Results ── */}
