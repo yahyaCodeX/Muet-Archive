@@ -34,7 +34,8 @@ export default function AdminDashboard() {
           batches:batch_id (label)
         `)
         .eq('is_approved', false)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .limit(50);
 
       if (pending) setPendingResources(pending);
 
@@ -47,7 +48,8 @@ export default function AdminDashboard() {
           departments:department_id (code),
           batches:batch_id (label)
         `)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .limit(50);
 
       if (all) setAllResources(all);
 

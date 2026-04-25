@@ -50,6 +50,14 @@ export default function BrowsePage() {
       if (filters.department !== "All") query = query.eq("department_id", filters.department);
       if (filters.batch !== "All")   query = query.eq("batch_id", filters.batch);
       if (filters.semester !== "All") query = query.eq("semester", filters.semester);
+      
+      // Implement text search via ilike
+      if (searchQuery.trim() !== "") {
+        query = query.ilike("title", `%${searchQuery}%`);
+      }
+
+      // Limit results to keep it lightweight and fast
+      query = query.limit(50);
 
       const { data, error } = await query;
       if (error) throw error;
