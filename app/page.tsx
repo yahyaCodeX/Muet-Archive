@@ -69,41 +69,25 @@ export default function Home() {
       {/* ──────────────────── HERO ──────────────────── */}
       <section className="relative min-h-[92vh] flex flex-col items-center justify-center overflow-hidden mesh-bg grid-overlay">
 
-        {/* === Purple Glow Orbs === */}
-        <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full bg-primary/20 blur-[120px] pointer-events-none" />
-        <div className="absolute top-[30%] left-[-5%] w-[300px] h-[300px] rounded-full bg-violet/15 blur-[100px] pointer-events-none animate-pulse" />
-        <div className="absolute bottom-[10%] right-[-5%] w-[350px] h-[350px] rounded-full bg-primary/10 blur-[100px] pointer-events-none" />
+        {/* === Purple Glow Orbs (Optimized for Performance) === */}
+        <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[700px] h-[400px] pointer-events-none" style={{ background: "radial-gradient(ellipse, rgba(168,85,247,0.15) 0%, transparent 70%)" }} />
+        <div className="absolute top-[30%] left-[-5%] w-[300px] h-[300px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(124,58,237,0.1) 0%, transparent 70%)" }} />
+        <div className="absolute bottom-[10%] right-[-5%] w-[350px] h-[350px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(168,85,247,0.08) 0%, transparent 70%)" }} />
 
-        {/* === Floating Elements === */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <motion.div
-            className="absolute top-[18%] left-[8%] w-12 h-12 rounded-2xl border border-primary/20 bg-surface/40 backdrop-blur-sm flex items-center justify-center"
-            animate={{ y: [0, -16, 0], rotate: [0, 5, 0] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-          >
+        {/* === Floating Elements (Simplified for Mobile Speed) === */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden hidden md:block">
+          <div className="absolute top-[18%] left-[8%] w-12 h-12 rounded-2xl border border-primary/20 bg-surface/40 backdrop-blur-sm flex items-center justify-center animate-pulse">
             <BookOpen className="w-5 h-5 text-primary/70" />
-          </motion.div>
-          <motion.div
-            className="absolute top-[25%] right-[10%] w-14 h-14 rounded-2xl border border-accent/20 bg-surface/40 backdrop-blur-sm flex items-center justify-center"
-            animate={{ y: [0, 14, 0], rotate: [0, -6, 0] }}
-            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-          >
+          </div>
+          <div className="absolute top-[25%] right-[10%] w-14 h-14 rounded-2xl border border-accent/20 bg-surface/40 backdrop-blur-sm flex items-center justify-center animate-pulse" style={{ animationDelay: "1s" }}>
             <BrainCircuit className="w-6 h-6 text-accent/70" />
-          </motion.div>
-          <motion.div
-            className="absolute bottom-[25%] left-[12%] w-10 h-10 rounded-xl border border-violet/20 bg-surface/40 backdrop-blur-sm flex items-center justify-center"
-            animate={{ y: [0, 12, 0], rotate: [0, 8, 0] }}
-            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-          >
+          </div>
+          <div className="absolute bottom-[25%] left-[12%] w-10 h-10 rounded-xl border border-violet/20 bg-surface/40 backdrop-blur-sm flex items-center justify-center animate-pulse" style={{ animationDelay: "0.5s" }}>
             <Zap className="w-4 h-4 text-violet/70" />
-          </motion.div>
-          <motion.div
-            className="absolute bottom-[30%] right-[8%] w-12 h-12 rounded-2xl border border-primary/20 bg-surface/40 backdrop-blur-sm flex items-center justify-center"
-            animate={{ y: [0, -12, 0], rotate: [0, -5, 0] }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-          >
+          </div>
+          <div className="absolute bottom-[30%] right-[8%] w-12 h-12 rounded-2xl border border-primary/20 bg-surface/40 backdrop-blur-sm flex items-center justify-center animate-pulse" style={{ animationDelay: "2s" }}>
             <Shield className="w-5 h-5 text-primary/70" />
-          </motion.div>
+          </div>
         </div>
 
         {/* === Hero Content === */}
@@ -205,8 +189,8 @@ export default function Home() {
       <section className="py-28 px-4 relative overflow-hidden"
         style={{ background: "linear-gradient(180deg, #07050f 0%, #0d0a1a 100%)" }}
       >
-        {/* BG glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[200px] bg-primary/10 blur-[80px] pointer-events-none" />
+        {/* BG glow (Optimized) */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[200px] pointer-events-none" style={{ background: "radial-gradient(ellipse, rgba(168,85,247,0.1) 0%, transparent 70%)" }} />
 
         <div className="max-w-4xl mx-auto relative z-10">
           <div
@@ -216,8 +200,8 @@ export default function Home() {
             <div className="rounded-3xl p-8 md:p-12 relative overflow-hidden"
               style={{ background: "linear-gradient(135deg, rgba(18,16,31,0.98) 0%, rgba(26,23,40,0.98) 100%)" }}
             >
-              {/* Inner glow */}
-              <div className="absolute top-0 right-0 w-72 h-72 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+              {/* Inner glow (Optimized) */}
+              <div className="absolute top-0 right-0 w-72 h-72 pointer-events-none" style={{ background: "radial-gradient(circle, rgba(168,85,247,0.05) 0%, transparent 70%)" }} />
               
               <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 text-center md:text-left">
                 {/* Icon */}

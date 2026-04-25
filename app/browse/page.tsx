@@ -367,11 +367,11 @@ export default function BrowsePage() {
                                 <span>{resource.download_count}</span>
                               </div>
                             </div>
-                            <div title={resource.is_verified ? "Verified" : "Unverified"}>
+                            <span title={resource.is_verified ? "Verified" : "Unverified"} className="flex items-center">
                               <CheckCircle
                                 className={`w-4 h-4 ${resource.is_verified ? 'text-success' : 'text-text-subtle/30'}`}
                               />
-                            </div>
+                            </span>
                           </div>
                         </div>
                       </div>

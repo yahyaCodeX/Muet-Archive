@@ -44,7 +44,13 @@ export default function ResourceDetailPage({ params }: { params: { id: string } 
       await supabase.rpc('increment_download_count', { row_id: resource.id });
       
       // Trigger download
-      window.open(resource.file_url, '_blank');
+      const downloadUrl = `${resource.file_url}?download=true`;
+      const a = document.createElement('a');
+      a.href = downloadUrl;
+      a.download = `${resource.title || 'resource'}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     } catch (error) {
       console.error(error);
     }
