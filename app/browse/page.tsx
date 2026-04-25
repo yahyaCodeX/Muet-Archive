@@ -16,8 +16,10 @@ export default function BrowsePage() {
   const supabase = createClient();
   const router = useRouter();
   const [resources, setResources] = useState<any[]>([]);
+  const [topResources, setTopResources] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [dbSubjects, setDbSubjects] = useState<any[]>([]);
   
   const [filters, setFilters] = useState({ 
     department: "", 
@@ -34,24 +36,46 @@ export default function BrowsePage() {
   const [batches, setBatches] = useState<any[]>([]);
   const [showFilters, setShowFilters] = useState(false);
 
-  // Derived subjects from curriculum
-  const semesterSubjects = filters.departmentCode && filters.semester 
-    ? (curriculumData as any)[filters.departmentCode]?.[filters.semester] || []
-    : [];
+  // Derived subjects: Merge curriculum seed with any custom subjects from DB
+  const semesterSubjects = Array.from(new Set([
+    ...((curriculumData as any)[filters.departmentCode]?.[filters.semester] || []),
+    ...dbSubjects.map(s => s.name)
+  ]));
 
   useEffect(() => {
-    async function loadFilters() {
-      const [{ data: depts }, { data: bths }] = await Promise.all([
+    async function loadInitialData() {
+      const [{ data: depts }, { data: bths }, { data: top }] = await Promise.all([
         supabase.from("departments").select("*"),
         supabase.from("batches").select("*"),
+        supabase.from("resources")
+          .select(`*, departments(code), batches(label), resource_subjects(subjects(name))`)
+          .eq("is_approved", true)
+          .order("download_count", { ascending: false })
+          .limit(6)
       ]);
       if (depts) setDepartments(depts);
       if (bths)  setBatches(bths);
+      if (top) setTopResources(top);
     }
-    loadFilters();
+    loadInitialData();
   }, [supabase]);
 
-  useEffect(() => { fetchResources(); }, [filters]);
+  useEffect(() => { 
+    if (filters.department && filters.semester) {
+      fetchDbSubjects();
+    }
+    fetchResources(); 
+  }, [filters]);
+
+  async function fetchDbSubjects() {
+    const { data } = await supabase
+      .from("subjects")
+      .select("name")
+      .eq("department_id", filters.department)
+      .eq("semester", parseInt(filters.semester))
+      .eq("is_approved", true);
+    if (data) setDbSubjects(data);
+  }
 
   async function fetchResources() {
     setLoading(true);
@@ -242,7 +266,29 @@ export default function BrowsePage() {
                   <Flame className="w-6 h-6 text-orange-500" />
                   <h2 className="text-2xl font-bold">🔥 Most Downloaded</h2>
                 </div>
-                {/* Could add a separate fetch for top downloaded here, fallback to resources for now */}
+                <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
+                  {topResources.map((resource, i) => (
+                    <motion.div key={`top-${resource.id}`} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.1 }}>
+                      <Link href={`/resource/${resource.id}`} className="block h-full">
+                        <div className="h-full rounded-2xl p-[1px] bg-gradient-to-br from-orange-500/20 to-transparent hover:from-orange-500/40 transition-all group">
+                          <div className="h-full bg-surface rounded-2xl p-5 flex flex-col relative overflow-hidden">
+                            <div className="absolute top-0 right-0 p-3">
+                              <div className="bg-orange-500/10 text-orange-500 px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1">
+                                <Download className="w-3 h-3" /> {resource.download_count}
+                              </div>
+                            </div>
+                            <h3 className="font-bold text-base mb-2 line-clamp-1 pr-12 group-hover:text-orange-500 transition-colors">
+                              {resource.title}
+                            </h3>
+                            <div className="text-xs text-text-muted mt-auto">
+                              {resource.departments?.code} • {resource.batches?.label}
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    </motion.div>
+                  ))}
+                </div>
               </div>
             )}
 
