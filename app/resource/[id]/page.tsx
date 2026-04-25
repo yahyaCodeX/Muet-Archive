@@ -21,7 +21,8 @@ export default function ResourceDetailPage({ params }: { params: { id: string } 
             *,
             departments (name, code),
             batches (label),
-            profiles (full_name, student_id)
+            profiles (full_name, student_id),
+            resource_subjects ( subjects (name) )
           `)
           .eq('id', params.id)
           .single();
@@ -97,7 +98,7 @@ export default function ResourceDetailPage({ params }: { params: { id: string } 
                 <div>
                   <div className="flex flex-wrap items-center gap-2 mb-2">
                     <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-blue-500/10 text-blue-500 border border-blue-500/20 uppercase tracking-wider">
-                      {resource.type.replace('_', ' ')}
+                      {resource.exam_type || resource.type.replace('_', ' ')}
                     </span>
                     {resource.is_verified && (
                       <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-success/10 text-success border border-success/20 uppercase tracking-wider">
@@ -108,6 +109,22 @@ export default function ResourceDetailPage({ params }: { params: { id: string } 
                   <h1 className="text-2xl md:text-3xl font-bold font-syne mb-2 text-text tracking-tight">
                     {resource.title}
                   </h1>
+                  
+                  {/* Subjects Display */}
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {resource.is_old_batch ? (
+                      <span className="px-3 py-1 rounded-full text-sm font-medium bg-surface-2 text-text border border-border">
+                        {resource.old_batch_subject_name}
+                      </span>
+                    ) : (
+                      resource.resource_subjects?.map((rs: any, idx: number) => (
+                        <span key={idx} className="px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary border border-primary/20">
+                          {rs.subjects?.name}
+                        </span>
+                      ))
+                    )}
+                  </div>
+
                   <p className="text-text-muted text-sm line-clamp-3 font-medium leading-relaxed">
                     {resource.description || "No description provided."}
                   </p>

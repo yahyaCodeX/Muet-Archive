@@ -49,6 +49,9 @@ create table subjects (
   code text,
   department_id uuid references departments(id),
   semester integer, -- 1 to 8
+  is_custom boolean default false,
+  is_approved boolean default true,
+  created_by_user_id uuid references auth.users(id),
   created_at timestamptz default now()
 );
 
@@ -57,6 +60,7 @@ create table resources (
   id uuid primary key default gen_random_uuid(),
   title text not null,
   type text not null, -- 'past_paper' | 'notes' | 'handout'
+  exam_type text, -- 'mid' | 'final' | 'quiz' | 'assignment' | 'other'
   department_id uuid references departments(id),
   batch_id uuid references batches(id),
   subject_id uuid references subjects(id),
@@ -71,7 +75,17 @@ create table resources (
   is_approved boolean default false, -- admin must approve
   description text,
   tags text[],
+  is_old_batch boolean default false,
+  old_batch_subject_name text,
   created_at timestamptz default now()
+);
+
+-- Junction table for multi-subject linking
+create table resource_subjects (
+  id uuid primary key default gen_random_uuid(),
+  resource_id uuid references resources(id) on delete cascade,
+  subject_id uuid references subjects(id) on delete cascade,
+  unique(resource_id, subject_id)
 );
 
 -- Ratings
@@ -118,6 +132,7 @@ alter table batches enable row level security;
 alter table profiles enable row level security;
 alter table subjects enable row level security;
 alter table resources enable row level security;
+alter table resource_subjects enable row level security;
 alter table ratings enable row level security;
 alter table comments enable row level security;
 alter table ai_chats enable row level security;
@@ -127,9 +142,11 @@ alter table notifications enable row level security;
 create policy "Public view access" on departments for select using (true);
 create policy "Public view access" on batches for select using (true);
 create policy "Public view access" on subjects for select using (true);
+create policy "Public view access" on resource_subjects for select using (true);
 
 create policy "Public view access for approved resources" on resources for select using (is_approved = true);
 create policy "Users can upload resources" on resources for insert with check (auth.uid() = uploaded_by);
+create policy "Users can link resources" on resource_subjects for insert with check (true);
 create policy "Admins can view all resources" on resources for select using (
   exists (select 1 from profiles where profiles.id = auth.uid() and profiles.role = 'admin')
 );
