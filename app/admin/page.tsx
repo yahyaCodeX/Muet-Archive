@@ -10,8 +10,9 @@ export default function AdminDashboard() {
   const supabase = createClient();
   const [activeTab, setActiveTab] = useState("pending");
   const [pendingResources, setPendingResources] = useState<any[]>([]);
+  const [pendingSubjects, setPendingSubjects] = useState<any[]>([]);
   const [allResources, setAllResources] = useState<any[]>([]);
-  const [stats, setStats] = useState({ total: 0, pending: 0, users: 0, downloads: 0 });
+  const [stats, setStats] = useState({ total: 0, pending: 0, users: 0, downloads: 0, pendingSubjects: 0 });
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState("all");
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -39,6 +40,16 @@ export default function AdminDashboard() {
 
       if (pending) setPendingResources(pending);
 
+      // Fetch Pending Subjects
+      const { data: pSubs } = await supabase
+        .from('subjects')
+        .select(`*, departments(code)`)
+        .eq('is_custom', true)
+        .eq('is_approved', false)
+        .order('created_at', { ascending: false });
+      
+      if (pSubs) setPendingSubjects(pSubs);
+
       // Fetch All Resources (for the "All Resources" tab)
       const { data: all } = await supabase
         .from('resources')
@@ -54,17 +65,19 @@ export default function AdminDashboard() {
       if (all) setAllResources(all);
 
       // Fetch Stats
-      const [{ count: totalRes }, { count: pendRes }, { count: totalUsers }] = await Promise.all([
+      const [{ count: totalRes }, { count: pendRes }, { count: totalUsers }, { count: pendSub }] = await Promise.all([
         supabase.from('resources').select('*', { count: 'exact', head: true }),
         supabase.from('resources').select('*', { count: 'exact', head: true }).eq('is_approved', false),
         supabase.from('profiles').select('*', { count: 'exact', head: true }),
+        supabase.from('subjects').select('*', { count: 'exact', head: true }).eq('is_custom', true).eq('is_approved', false),
       ]);
 
       setStats({
         total: totalRes || 0,
         pending: pendRes || 0,
         users: totalUsers || 0,
-        downloads: 0 // In a real app, sum(download_count)
+        downloads: 0,
+        pendingSubjects: pendSub || 0
       });
 
     } catch (error) {
@@ -73,6 +86,31 @@ export default function AdminDashboard() {
       setLoading(false);
     }
   }
+
+  const handleApproveSubject = async (id: string) => {
+    try {
+      const { error } = await supabase.from('subjects').update({ is_approved: true }).eq('id', id);
+      if (error) throw error;
+      toast.success("Subject approved and merged into curriculum!");
+      setPendingSubjects(prev => prev.filter(s => s.id !== id));
+      setStats(prev => ({ ...prev, pendingSubjects: prev.pendingSubjects - 1 }));
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
+  const handleDeleteSubject = async (id: string) => {
+    if (!confirm("Are you sure? Deleting this subject will NOT delete linked resources but they will become harder to find.")) return;
+    try {
+      const { error } = await supabase.from('subjects').delete().eq('id', id);
+      if (error) throw error;
+      toast.success("Custom subject deleted.");
+      setPendingSubjects(prev => prev.filter(s => s.id !== id));
+      setStats(prev => ({ ...prev, pendingSubjects: prev.pendingSubjects - 1 }));
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
 
   const handleApprove = async (id: string) => {
     try {
@@ -185,6 +223,15 @@ export default function AdminDashboard() {
               >
                 <BookOpen className="w-5 h-5" /> All Resources
                 <span className="ml-auto bg-white/20 text-white px-2 py-0.5 rounded-full text-xs">{stats.total}</span>
+              </button>
+              <button 
+                onClick={() => setActiveTab("subjects")}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-sm font-medium ${
+                  activeTab === "subjects" ? "bg-orange-500 text-white shadow-glow" : "text-text-muted hover:text-text hover:bg-surface-2"
+                }`}
+              >
+                <BookOpen className="w-5 h-5" /> Subjects Review
+                <span className="ml-auto bg-white/20 text-white px-2 py-0.5 rounded-full text-xs">{stats.pendingSubjects}</span>
               </button>
               <button 
                 onClick={() => setActiveTab("users")}
